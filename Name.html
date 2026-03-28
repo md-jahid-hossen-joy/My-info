@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Mastery Interactive: Part 3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --py-blue: #306998;
+            --py-light-blue: #4B8BBE;
+            --py-yellow: #FFE873;
+            --py-dark-yellow: #FFD43B;
+            --bg-dark: #12151A;
+            --card-bg: #1E222A;
+            --text-light: #E4E6EB;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background-image: radial-gradient(circle at top right, #1a2735 0%, transparent 50%),
+                              radial-gradient(circle at bottom left, #292415 0%, transparent 50%);
+        }
+
+        .app-container {
+            width: 90%;
+            max-width: 800px;
+            height: 85vh;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .slide {
+            display: none;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100%;
+            padding: 40px;
+            text-align: center;
+            animation: slideIn 0.5s ease-out forwards;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--py-blue) transparent;
+        }
+
+        .slide::-webkit-scrollbar {
+            width: 6px;
+        }
+        .slide::-webkit-scrollbar-thumb {
+            background-color: var(--py-blue);
+            border-radius: 10px;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        h1 {
+            color: var(--py-yellow);
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(255, 232, 115, 0.3);
+        }
+
+        h2 {
+            color: var(--py-light-blue);
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 600px;
+            color: #B0B3B8;
+        }
+
+        .code-block {
+            background: #111;
+            padding: 20px;
+            border-left: 5px solid var(--py-yellow);
+            border-radius: 8px;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.1rem;
+            color: #00FF00;
+            margin: 20px 0;
+            text-align: left;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+            flex-shrink: 0;
+        }
+
+        .list-container {
+            text-align: left;
+            max-width: 600px;
+            width: 100%;
+            font-size: 1.1rem;
+            color: #B0B3B8;
+            margin-bottom: 20px;
+        }
+
+        .list-container li {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            list-style-type: none;
+            border-left: 3px solid var(--py-light-blue);
+        }
+
+        .nav-buttons {
+            position: sticky;
+            bottom: 0;
+            margin-top: auto;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 0;
+            background: var(--card-bg); 
+            flex-shrink: 0;
+        }
+
+        button {
+            background: var(--py-blue);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(48, 105, 152, 0.4);
+        }
+
+        button:hover {
+            background: var(--py-light-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(75, 139, 190, 0.6);
+        }
+
+        .start-btn {
+            background: var(--py-yellow);
+            color: var(--bg-dark);
+            font-size: 1.3rem;
+            padding: 15px 40px;
+            box-shadow: 0 5px 15px rgba(255, 232, 115, 0.3);
+        }
+
+        .start-btn:hover {
+            background: var(--py-dark-yellow);
+            box-shadow: 0 8px 20px rgba(255, 212, 59, 0.5);
+        }
+
+        .hw-box {
+            border: 2px dashed var(--py-yellow);
+            padding: 30px;
+            border-radius: 15px;
+            background: rgba(255, 232, 115, 0.05);
+            width: 100%;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 5px;
+            background: var(--py-yellow);
+            width: 0%;
+            transition: width 0.3s ease;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="progress-bar" id="progress"></div>
+
+        <div class="slide active" id="slide-0">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Python Logo" width="120" style="margin-bottom: 20px;">
+            <h1>MD:JAHID HOSSEN JOY</h1>
+            <p>​Professional Web Designer specialized in HTML & CSS Python SQl. I create clean, modern, and fully responsive websites tailored to your needs. Let's build a stunning web presence together!"</p>
+            <button class="start-btn" onclick="nextSlide()">Let's Go!</button>
+        </div>
+
+        <div class="slide" id="slide-1">
+            <h2>1. Data Types: Text & Math</h2>
+            <p>Computers need to know what kind of information they are looking at. We call these <b>Data Types</b>.</p>
+            
+            <p>The two most common types are <b>Strings</b> (text wrapped in quotes) and <b>Integers</b> (whole numbers used for math).</p>
+            <div class="code-block">
+                # This is a String (Text)<br>
+                name = "Pizza"<br><br>
+                # This is an Integer (Whole Number)<br>
+                slices = 8
+            </div>
+            <div class="nav-buttons">
+                <button onclick="prevSlide()">Back</button>
+                <button onclick="nextSlide()">Next</button>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-2">
+            <h2>2. Data Types: Decimals & Truth</h2>
+            <p>What if you want to store a number with a decimal? In Python, we call that a <b>Float</b> (floating-point number).</p>
+            <p>We also have <b>Booleans</b>, which are super simple: they can only be <code>True</code> or <code>False</code>. They are like light switches!</p>
+            <div class="code-block">
+                # This is a Float (Decimal)<br>
+                price = 19.99<br><br>
+                # This is a Boolean (True/False)<br>
+                is_tasty = True
+            </div>
+            <div class="nav-buttons">
+                <button onclick="prevSlide()">Back</button>
+                <button onclick="nextSlide()">Next</button>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-3">
+            <h2>3. Leaving Comments</h2>
+            <p>Sometimes you want to leave notes in your code for humans to read, but you want the computer to ignore them. These are called <b>Comments</b>.</p>
+            <p>In Python, just type the hash symbol <code>#</code>. Anything after the hash on that line becomes invisible to the computer!</p>
+            <div class="code-block">
+                # This is a comment. The computer ignores it.<br>
+                score = 100 # You can put them after code, too!<br><br>
+                print("Hello!") # Only "Hello!" gets printed.
+            </div>
+            <div class="nav-buttons">
+                <button onclick="prevSlide()">Back</button>
+                <button onclick="nextSlide()">Next</button>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-4">
+            <h2>4. Type Conversion (Shape Shifting!)</h2>
+            <p>Sometimes, data is in the wrong format. For example, the text <code>"5"</code> is a String, not a number. You can't do math with text!</p>
+            
+            <p>We can use built-in magic spells to convert them: <code>int()</code> turns things into integers, and <code>str()</code> turns things into text.</p>
+            <div class="code-block">
+                fake_number = "5" # It's trapped in quotes!<br>
+                real_number = int(fake_number) # Now it's an integer<br><br>
+                print(real_number + 10) # Output: 15
+            </div>
+            <div class="nav-buttons">
+                <button onclick="prevSlide()">Back</button>
+                <button onclick="nextSlide()">Next</button>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-5">
+            <h2>5. Why do we convert?</h2>
+            <p>Imagine you ask a user for their age using Python's <code>input()</code> feature. User input <i>always</i> comes back as a String (Text).</p>
+            <p>If you want to calculate how old they will be next year, you must convert their text answer into a math number first!</p>
+            <div class="code-block">
+                age_text = "20" # Imagine a user typed this<br>
+                <br>
+                # We shape-shift it into a Float (Decimal)<br>
+                age_number = float(age_text)<br>
+                print(age_number) # Output: 20.0
+            </div>
+            <div class="nav-buttons">
+                <button onclick="prevSlide()">Back</button>
+                <button onclick="nextSlide()">Quiz Time!</button>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-6">
+            <h2 style="color: var(--py-yellow);">Pop Quiz!</h2>
+            <p>Let's see what you remember from Part 3. Try to answer these mentally.</p>
+            <ul class="list-container">
+                <li>1. What Data Type is <code>"Hello"</code>?</li>
+                <li>2. What Data Type is <code>3.14</code>?</li>
+                <li>3. What symbol do you use to write a note the computer ignores?</li>
+                <li>4. What command turns the text <code>"10"</code> into a real number?</li>
+            </ul>
+            <div class="nav-buttons">
+                <button onclick="prevSlide()">Back</button>
+                <button onclick="nextSlide()">Reveal Answers</button>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-7">
+            <h2>Quiz Answers</h2>
+            <ul class="list-container" style="border-left-color: #00FF00;">
+                <li><b>1.</b> String. (Because of the quotes!)</li>
+                <li><b>2.</b> Float. (Because it has a decimal!)</li>
+                <li><b>3.</b> The hash symbol <code>#</code>. (Creates a comment)</li>
+                <li><b>4.</b> <code>int("10")</code>. (Converts it to an integer)</li>
+            </ul>
+            <div class="nav-buttons">
+                <button onclick="prevSlide()">Back</button>
+                <button onclick="nextSlide()">View Homework</button>
+            </div>
+        </div>
+
+        <div class="slide" id="slide-8">
+            <h2>Your Part 3 Assignment</h2>
+            <div class="hw-box">
+                <h3 style="margin-bottom: 15px;">📝 Homework Task</h3>
+                <p>Write a script where you create a String variable storing the number <code>"5"</code>. Convert it to an Integer, add <code>10</code> to it, and leave a Comment explaining what you did!</p>
+                <div class="code-block" style="color: #888;">
+                    # Example layout:<br>
+                    text_num = "5"<br>
+                    # Convert it here...<br>
+                    # Add 10 to it...<br>
+                    # Print the answer!
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button onclick="prevSlide()">Back</button>
+                <button onclick="resetApp()" style="background: var(--py-yellow); color: var(--bg-dark);">Finish & Restart</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressBar = document.getElementById('progress');
+
+        function updateUI() {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlideIndex].classList.add('active');
+            
+            slides[currentSlideIndex].scrollTop = 0;
+
+            const progressPercentage = (currentSlideIndex / (slides.length - 1)) * 100;
+            progressBar.style.width = progressPercentage + '%';
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < slides.length - 1) {
+                currentSlideIndex++;
+                updateUI();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                updateUI();
+            }
+        }
+
+        function resetApp() {
+            currentSlideIndex = 0;
+            updateUI();
+        }
+    </script>
+</body>
+</html>
